@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-ui
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    name: ingress-ui
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt"
+    kubernetes.io/ingress.class: "nginx"
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    service.beta.kubernetes.io/do-loadbalancer-hostname: "{{ .Values.ingress.host }}"
+spec:
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName: crawler-ui
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.service.name }}
+            port:
+              number: {{ .Values.service.externalPort }}

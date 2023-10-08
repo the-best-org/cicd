@@ -1,0 +1,21 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.service.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    prometheus.deckhouse.io/custom-target: {{ .Values.service.name }}
+  annotations:
+    prometheus.deckhouse.io/port: "{{ .Values.service.targetPort }}"                      # по умолчанию будет использоваться порт сервиса с именем http-metrics или https-metrics
+    prometheus.deckhouse.io/path: "{{ .Values.service.checkPath }}"           # по умолчанию /metrics
+    prometheus.deckhouse.io/query-param-format: "prometheus"  # по умолчанию ''
+    prometheus.deckhouse.io/allow-unready-pod: "true"         # по умолчанию Pod'ы НЕ в Ready игнорируются
+    prometheus.deckhouse.io/sample-limit: "5000"              # по умолчанию принимается не больше 5000 метрик от одного Pod'а
+
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Values.deployment.name }}
+  ports:
+  - port: {{ .Values.service.externalPort }}
+    targetPort: {{ .Values.service.targetPort }}

@@ -1,0 +1,20 @@
+global:
+  namespace: crawler
+
+service:
+  externalPort: 8000
+  targetPort: 8000
+  name: crawler-ui-service
+  checkPath: /metrics
+
+deployment:
+  image: 
+  replicas: 1
+  name: crawler-ui-app
+  env:
+    mongoAddress:
+    mongoPort:
+    flaskApp: "/ui.py"
+
+ingress:
+    host: 
