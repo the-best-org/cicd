@@ -29,7 +29,7 @@ jobs:
       - name: checkout helm repo
         uses: actions/checkout@v3
         with: 
-          name: the-best-org/helm
+          repository: the-best-org/cicd
       - name: Deploy
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.crawler-ui-image != ''
         uses: WyriHaximus/github-action-helm3@v3
