@@ -1,0 +1,23 @@
+global:
+    namespace: crawler
+
+deployment:
+    image: 
+    name: crawler-deployment
+    replicas: 1
+    env:
+        mongoAddress: 
+        mongoPort: 
+        rabbitHost: 
+        rabbitQueue: 
+        rabbitUser:
+        rabbitPassword: 
+        checkInterval: 
+        exclude: 
+        url:
+
+service:
+    externalPort: 8000
+    targetPort: 8000
+    name: crawler-service
+    checkPath: /
