@@ -29,7 +29,7 @@ jobs:
         uses: WyriHaximus/github-action-helm3@v3.1.0
         with:
           exec: >
-            helm upgrade crawler-ui ./crawler-ui/ --install --wait --atomic
+            cat /home/runner/.kube/config && helm upgrade crawler-ui ./crawler-ui/ --install --wait --atomic
             --namespace=crawler --values=./crawler-ui/values.yaml
             --set deployment.image=${{ inputs.crawler-ui-image }}
             --set ingress.host=${{ vars.SEARCH_INGRESS_ADDRESS }}
