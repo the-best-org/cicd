@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crawler-deployment
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.deployment.name }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.name }}
+    spec:
+      containers:
+      - name: {{ .Values.deployment.name }}
+        image: {{ .Values.deployment.image }}
+        env:
+        - name: MONGO
+          value: "{{ .Values.deployment.env.mongoAddress }}"
+        - name: MONGO_PORT
+          value: "{{ .Values.deployment.env.mongoPort }}"
+        - name: RMQ_HOST
+          value: "{{ .Values.deployment.env.rabbitHost }}"
+        - name: RMQ_QUEUE
+          value: "{{ .Values.deployment.env.rabbitQueue }}"
+        - name: RMQ_USERNAME
+          value: "{{ .Values.deployment.env.rabbitUser }}"
+        - name: RMQ_PASSWORD
+          value: "{{ .Values.deployment.env.rabbitPassword }}"
+        - name: CHECK_INTERVAL
+          value: "{{ .Values.deployment.env.checkInterval }}"
+        - name: EXCLUDE_URLS
+          value: "{{ .Values.deployment.env.exclude }}"
+        - name: URL
+          value: "{{ .Values.deployment.env.url }}"
+        ports:
+        - containerPort: {{ .Values.service.externalPort }}
