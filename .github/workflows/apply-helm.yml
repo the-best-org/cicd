@@ -13,20 +13,25 @@ on:
           type: string
           description: Image tag of crawler-ui
 
-# env:
-#   # Use docker.io for Docker Hub if empty
-#   REGISTRY: docker.io
-#   # github.repository as <account>/<repo>
-#   IMAGE_NAME: asazanoff/crawler
-#   USERNAME: asazanoff
-#   TEST_TAG: test
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: docker.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: asazanoff/crawler
+  USERNAME: asazanoff
+  TEST_TAG: test
+  HELM_REPO_NAME: 
 
 jobs:
   upgrade_crawler:
     runs-on: 'ubuntu-latest'
     steps:
-      - uses: actions/checkout@v3
+      - name: checkout helm repo
+        uses: actions/checkout@v3
+        with: 
+          name: the-best-org/helm
       - name: Deploy
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.crawler-ui-image != ''
         uses: WyriHaximus/github-action-helm3@v3
         with:
           exec: >
