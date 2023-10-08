@@ -33,5 +33,5 @@ jobs:
             --namespace=crawler --values=./crawler-ui/values.yaml
             --set deployment.image=${{ inputs.crawler-ui-image }}
             --set ingress.host=${{ vars.SEARCH_INGRESS_ADDRESS }}
-          kubeconfig: "${{ secrets.KUBECONFIG }}"
-          overrule_existing_kubeconfig: "false"
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
+          overrule_existing_kubeconfig: "true"
