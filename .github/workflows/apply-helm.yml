@@ -14,13 +14,7 @@ on:
           description: Image tag of crawler-ui
 
 env:
-  # Use docker.io for Docker Hub if empty
-  REGISTRY: docker.io
-  # github.repository as <account>/<repo>
-  IMAGE_NAME: asazanoff/crawler
-  USERNAME: asazanoff
-  TEST_TAG: test
-  HELM_REPO_NAME: 
+  HELM_REPO_NAME: the-best-org/cicd
 
 jobs:
   upgrade_crawler:
@@ -29,9 +23,9 @@ jobs:
       - name: checkout helm repo
         uses: actions/checkout@v3
         with: 
-          repository: the-best-org/cicd
+          repository: ${{ env.HELM_REPO_NAME }}
       - name: Deploy
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.crawler-ui-image != ''
+        if: ${{ github.event.inputs.crawler-ui-image}} != '' && github.event_name == 'workflow_dispatch'
         uses: WyriHaximus/github-action-helm3@v3
         with:
           exec: >
