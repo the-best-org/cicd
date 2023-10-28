@@ -12,20 +12,24 @@ on:
           required: false
           type: string
           description: Image tag of crawler-ui
+      crawler-image:
+          required: false
+          type: string
+          description: Image tag of crawler
 
 env:
   HELM_REPO_NAME: the-best-org/cicd
 
 jobs:
-  upgrade_crawler:
+  upgrade_crawler-ui:
     runs-on: 'ubuntu-latest'
+    if: ${{ github.event.inputs.crawler-ui-image}} != '' && github.event_name == 'workflow_dispatch'
     steps:
       - name: checkout helm repo
         uses: actions/checkout@v3
         with: 
           repository: ${{ env.HELM_REPO_NAME }}
       - name: Deploy
-        if: ${{ github.event.inputs.crawler-ui-image}} != '' && github.event_name == 'workflow_dispatch'
         uses: WyriHaximus/github-action-helm3@v3.1.0
         with:
           exec: >
@@ -33,5 +37,22 @@ jobs:
             --namespace=crawler --values=./crawler-ui/values.yaml
             --set deployment.image=${{ inputs.crawler-ui-image }}
             --set ingress.host=${{ vars.SEARCH_INGRESS_ADDRESS }}
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+          overrule_existing_kubeconfig: "true"
+  upgrade_crawler:
+    runs-on: 'ubuntu-latest'
+    if: ${{ github.event.inputs.crawler-image}} != '' && github.event_name == 'workflow_dispatch'
+    steps:
+      - name: checkout helm repo
+        uses: actions/checkout@v3
+        with: 
+          repository: ${{ env.HELM_REPO_NAME }}
+      - name: Deploy
+        uses: WyriHaximus/github-action-helm3@v3.1.0
+        with:
+          exec: >
+            helm upgrade crawler ./crawler/ --install --wait --atomic
+            --namespace=crawler --values=./crawler/values.yaml
+            --set deployment.image=${{ inputs.crawler-image }}
           kubeconfig: ${{ secrets.KUBECONFIG }}
           overrule_existing_kubeconfig: "true"
