@@ -9,7 +9,7 @@ on:
   workflow_call: 
     inputs:
       crawler-ui-image:
-          required: false
+          required: true
           type: string
           description: Image tag of crawler-ui
     secrets:
@@ -22,7 +22,7 @@ env:
 jobs:
   upgrade_crawler-ui:
     runs-on: 'ubuntu-latest'
-    if: ${{ github.event.inputs.crawler-ui-image != '' }} && github.event_name == 'workflow_dispatch'
+    if: ${{ inputs.crawler-ui-image != '' }} && github.event_name == 'workflow_dispatch'
     steps:
       - name: checkout helm repo
         uses: actions/checkout@v3
@@ -34,6 +34,6 @@ jobs:
           exec: >
             helm upgrade crawler-ui ./crawler-ui/ --install --wait --atomic
             --namespace=crawler --values=./crawler-ui/values.yaml
-            --set deployment.image=${{ github.event.inputs.crawler-ui-image }}
+            --set deployment.image=${{ inputs.crawler-ui-image }}
           kubeconfig: ${{ secrets.KUBECONFIG }}
           overrule_existing_kubeconfig: "true"
