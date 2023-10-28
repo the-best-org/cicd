@@ -9,7 +9,7 @@ on:
   workflow_call: 
     inputs:
       crawler-image:
-          required: false
+          required: true
           type: string
           description: Image tag of crawler
     secrets:
