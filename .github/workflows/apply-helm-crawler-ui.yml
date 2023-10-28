@@ -34,5 +34,6 @@ jobs:
           exec: >
             helm upgrade crawler-ui ./crawler-ui/ --install --wait --atomic
             --namespace=crawler --values=./crawler-ui/values.yaml
+            --set deployment.image=${{ github.event.inputs.crawler-ui-image }}
           kubeconfig: ${{ secrets.KUBECONFIG }}
           overrule_existing_kubeconfig: "true"
