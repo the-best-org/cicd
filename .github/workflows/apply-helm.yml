@@ -26,7 +26,7 @@ jobs:
         with: 
           repository: ${{ env.HELM_REPO_NAME }}
       - name: pull kubeconfig
-        run: echo $KUBECONFIG > ~/.kube/config && cat /home/runner/.kube/config && echo ---
+        run: touch ~/.kube/config && echo $KUBECONFIG > ~/.kube/config && ~/.kube/config
       - name: Deploy
         if: ${{ github.event.inputs.crawler-ui-image}} != '' && github.event_name == 'workflow_dispatch'
         uses: WyriHaximus/github-action-helm3@v3.1.0
