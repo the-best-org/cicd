@@ -17,4 +17,4 @@ deployment:
     flaskApp: "/ui.py"
 
 ingress:
-    host: 
+    host: search.xn--e1adnf2fb.xn--p1ai

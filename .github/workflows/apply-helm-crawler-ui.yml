@@ -12,10 +12,6 @@ on:
           required: false
           type: string
           description: Image tag of crawler-ui
-      crawler-image:
-          required: false
-          type: string
-          description: Image tag of crawler
     secrets:
       KUBECONFIG:
         required: true
@@ -38,24 +34,5 @@ jobs:
           exec: >
             helm upgrade crawler-ui ./crawler-ui/ --install --wait --atomic
             --namespace=crawler --values=./crawler-ui/values.yaml
-          kubeconfig: ${{ secrets.KUBECONFIG }}
-          overrule_existing_kubeconfig: "true"
-  upgrade_crawler:
-    runs-on: 'ubuntu-latest'
-    if: ${{ github.event.inputs.crawler-image != '' }}  && github.event_name == 'workflow_dispatch'
-    steps:
-      - name: checkout helm repo
-        uses: actions/checkout@v3
-        with: 
-          repository: ${{ env.HELM_REPO_NAME }}
-      - name: Deploy
-        uses: WyriHaximus/github-action-helm3@v3.1.0
-        with:
-          exec: >
-            helm upgrade crawler ./crawler/ --install --wait --atomic
-            --namespace=crawler --values=./crawler/values.yaml
-            --set deployment.env.rabbitQueue=${{ secrets.RABBITQUEUE }}
-            --set deployment.env.rabbitUser=${{ secrets.RABBITUSERNAME }}
-            --set deployment.env.rabbitPassword=${{ secrets.RABBITPASSWORD }}
           kubeconfig: ${{ secrets.KUBECONFIG }}
           overrule_existing_kubeconfig: "true"
