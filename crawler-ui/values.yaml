@@ -12,9 +12,9 @@ deployment:
   replicas: 1
   name: crawler-ui-app
   env:
-    mongoAddress: mongodb.mongodb.svc.cluster.local
-    mongoPort: 27017
+    mongoAddress: "mongodb.mongodb.svc.cluster.local"
+    mongoPort: "27017"
     flaskApp: "/ui.py"
 
 ingress:
-    host: search.xn--e1adnf2fb.xn--p1ai
+    host: "search.xn--e1adnf2fb.xn--p1ai"
