@@ -35,8 +35,6 @@ jobs:
           exec: >
             helm upgrade crawler-ui ./crawler-ui/ --install --wait --atomic
             --namespace=crawler --values=./crawler-ui/values.yaml
-            --set deployment.image=${{ inputs.crawler-ui-image }}
-            --set ingress.host=${{ vars.SEARCH_INGRESS_ADDRESS }}
           kubeconfig: ${{ secrets.KUBECONFIG }}
           overrule_existing_kubeconfig: "true"
   upgrade_crawler:
@@ -53,6 +51,8 @@ jobs:
           exec: >
             helm upgrade crawler ./crawler/ --install --wait --atomic
             --namespace=crawler --values=./crawler/values.yaml
-            --set deployment.image=${{ inputs.crawler-image }}
+            --set deployment.env.rabbitQueue=${{ secrets.RABBITQUEUE }}
+            --set deployment.env.rabbitUser=${{ secrets.RABBITUSERNAME }}
+            --set deployment.env.rabbitPassword=${{ secrets.RABBITPASSWORD }}
           kubeconfig: ${{ secrets.KUBECONFIG }}
           overrule_existing_kubeconfig: "true"

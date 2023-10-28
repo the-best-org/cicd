@@ -8,12 +8,12 @@ service:
   checkPath: /metrics
 
 deployment:
-  image: 
+  image: asazanoff/crawler-ui:main
   replicas: 1
   name: crawler-ui-app
   env:
-    mongoAddress:
-    mongoPort:
+    mongoAddress: mongodb.mongodb.svc.cluster.local
+    mongoPort: 27017
     flaskApp: "/ui.py"
 
 ingress:

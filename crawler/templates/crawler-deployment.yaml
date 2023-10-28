@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crawler-deployment
+  name: {{ .Values.deployment.name }}
   namespace: {{ .Values.global.namespace }}
   labels:
     app: {{ .Values.deployment.name }}

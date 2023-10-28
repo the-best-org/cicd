@@ -2,19 +2,19 @@ global:
     namespace: crawler
 
 deployment:
-    image: 
+    image: asazanoff/crawler:main
     name: crawler-deployment
     replicas: 1
     env:
-        mongoAddress: 
-        mongoPort: 
-        rabbitHost: 
+        mongoAddress: mongodb.mongodb.svc.cluster.local
+        mongoPort: 27017
+        rabbitHost: rabbitmq.rabbit.svc.cluster.local
         rabbitQueue: 
         rabbitUser:
         rabbitPassword: 
-        checkInterval: 
-        exclude: 
-        url:
+        checkInterval: 25
+        exclude: ".*github.com,.*twitter.com,.*githubstatus.com"
+        url: "https://vitkhab.github.io/search_engine_test_site/"
 
 service:
     externalPort: 8000
