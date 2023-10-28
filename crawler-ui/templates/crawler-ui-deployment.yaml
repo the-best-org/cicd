@@ -20,10 +20,10 @@ spec:
         image: {{ .Values.deployment.image }}
         env:
         - name: MONGO
-          value: {{ .Values.deployment.env.mongoAddress }}
+          value: "{{ .Values.deployment.env.mongoAddress }}"
         - name: MONGO_PORT
-          value: {{ .Values.deployment.env.mongoPort }}
+          value: "{{ .Values.deployment.env.mongoPort }}"
         - name: FLASK_APP
-          value: {{ .Values.deployment.env.flaskApp }}
+          value: "{{ .Values.deployment.env.flaskApp }}"
         ports:
         - containerPort: {{ .Values.service.externalPort }}
