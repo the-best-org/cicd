@@ -13,8 +13,8 @@ deployment:
         rabbitUser:
         rabbitPassword: 
         checkInterval: 25
-        exclude: ".*github.com,.*twitter.com,.*githubstatus.com"
-        url: "https://vitkhab.github.io/search_engine_test_site/"
+        exclude: .*github.com,.*twitter.com,.*githubstatus.com
+        url: https://vitkhab.github.io/search_engine_test_site/
 
 service:
     externalPort: 8000

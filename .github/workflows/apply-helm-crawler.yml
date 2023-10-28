@@ -22,7 +22,7 @@ env:
 jobs:
   upgrade_crawler:
     runs-on: 'ubuntu-latest'
-    if: ${{ github.event.inputs.crawler-image != '' }}  && github.event_name == 'workflow_dispatch'
+    if: ${{ inputs.crawler-image != '' }}  && github.event_name == 'workflow_dispatch'
     steps:
       - name: checkout helm repo
         uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
           exec: >
             helm upgrade crawler ./crawler/ --install --wait --atomic
             --namespace=crawler --values=./crawler/values.yaml
-            --set deployment.image=${{ github.event.inputs.crawler-image }}
+            --set deployment.image=${{ inputs.crawler-image }}
             --set deployment.env.rabbitQueue=${{ secrets.RABBITQUEUE }}
             --set deployment.env.rabbitUser=${{ secrets.RABBITUSERNAME }}
             --set deployment.env.rabbitPassword=${{ secrets.RABBITPASSWORD }}
