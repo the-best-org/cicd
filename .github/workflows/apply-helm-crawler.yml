@@ -34,6 +34,7 @@ jobs:
           exec: >
             helm upgrade crawler ./crawler/ --install --wait --atomic
             --namespace=crawler --values=./crawler/values.yaml
+            --set deployment.image=${{ github.event.inputs.crawler-image }}
             --set deployment.env.rabbitQueue=${{ secrets.RABBITQUEUE }}
             --set deployment.env.rabbitUser=${{ secrets.RABBITUSERNAME }}
             --set deployment.env.rabbitPassword=${{ secrets.RABBITPASSWORD }}
