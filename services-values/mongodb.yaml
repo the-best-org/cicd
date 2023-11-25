@@ -1,0 +1,19 @@
+clusterDomain: xn--e1adnf2fb.xn--p1ai
+image:
+  registry: docker.io
+  repository: bitnami/mongodb
+  tag: 4.1.13
+architecture: standalone
+useStatefulSet: false
+auth:
+  enabled: false
+tls:
+  enabled: false
+replicaCount: 1
+containerPorts:
+  mongodb: 27017
+service:
+  type: ClusterIP
+  portName: mongodb
+  ports:
+    mongodb: 27017
