@@ -2,6 +2,22 @@
 
 В репозитории находятся Helm-чарты и пайплайны для доставки приложений в кластер Kubernetes.
 
+# Используемые инструменты
+
+1. Deckhouse в качестве кластера Kubernetes
+2. Mongo и Rabbit развернуты через Helm-чарты Bitnami
+3. Сбор и визуализация метрик Prometheus + Grafana, сбор логов Loki
+4. Git и Ci-Cd система Github
+
+## MongoDB и RabbitMQ
+
+Для развертывания Mongo и Rabbit используйте чарты Bitnami с кастомными values из директории `services-values`:
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm upgrade --install mongodb bitnami/mongodb --version 14.0.4 -f services-values\mongodb.yaml
+helm install rabbitmq bitnami/rabbitmq --version 10.3.9 -f services-values\rabbitmq.yaml
+```
+
 ## Crawler-app
 
 Чарт находится в директории `crawler`, разворачивает Deployment и Service. В values можно определить несекретные параметры (соединение с БД и брокером сообщений, URL и базовый-образ приложения). Секретные параметры, в том числе kubeconfig-файл и креды для доступа к брокеру или БД (если необходимо) можно сохранить в секретах Github Actions. Подстановка этих переменных происходит на уровне выполнения пайплайна через `--set var=value`.
@@ -23,7 +39,7 @@
 Здесь также возможно сделать разворачивание приложения в отдельном неймспейсе для тестовых целей, при изменении main-ветки.
 
 Для создания kubeconfig с кредами сервисного аккаунта можете использовать эти команды
-```
+```bash
 kubectl config set-cluster my-cluster --server=https://$(kubectl -n d8-user-authn get ing kubernetes-api -ojson | jq '.spec.rules[].host' -r)  --kubeconfig=kube.config
 kubectl config set-credentials github-actions-deploy.my-cluster --token=$(kubectl -n d8-service-accounts get secret github-actions-deploy-token -o json |jq -r '.data["token"]' | base64 -d) --kubeconfig=kube.config
 kubectl config set-context my-cluster-github-actions-deploy.my-cluster --cluster=my-cluster --user=github-actions-deploy.my-cluster --kubeconfig=kube.config
@@ -34,9 +50,11 @@ kubectl config use-context my-cluster-github-actions-deploy.my-cluster --kubecon
 
 Отправка метрик приложения в Prometheus происходит через аннотацию `prometheus.deckhouse.io` в сервисах. Метрики появятся в Prometheus Декхауса автоматически.
 
+Дашборд для мониторинга приложения в Grafana находится в файле `crawler-dashboard.json`.
+
 Отправка логов в Loki настраивается применением конфигурации:
 
-```
+```yaml
 apiVersion: deckhouse.io/v1alpha1
 kind: ModuleConfig
 metadata:
@@ -69,13 +87,6 @@ Loki имеет внутренний инструмент парсинга json,
 Сбор метрик компонентов Deckhouse и их визуализация не требует настройки.
 
 Трейсинг не реализован, поскольку в приложении нет документации по инструментам для ее трассировки.
-
-# Используемые инструменты
-
-1. Deckhouse в качестве кластера Kubernetes
-2. Mongo и Rabbit развернуты через Helm-чарты Bitnami
-3. Сбор и визуализация метрик Prometheus + Grafana, сбор логов Loki
-4. Git и Ci-Cd система Github
 
 # Выполненные работы
 ## Сентябрь 2023
