@@ -2,6 +2,10 @@
 
 В репозитории находятся Helm-чарты и пайплайны для доставки приложений в кластер Kubernetes.
 
+Код приложений и пайплайны сборки находятся в их собственных репозиториях.
+
+![Repositories](img/repos.PNG)
+
 # Используемые инструменты
 
 1. Deckhouse в качестве кластера Kubernetes
@@ -15,7 +19,7 @@
 ```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm upgrade --install mongodb bitnami/mongodb --version 14.0.4 -f services-values\mongodb.yaml
-helm install rabbitmq bitnami/rabbitmq --version 10.3.9 -f services-values\rabbitmq.yaml
+helm upgrade --install rabbitmq bitnami/rabbitmq --version 10.3.9 -f services-values\rabbitmq.yaml
 ```
 
 ## Crawler-app
@@ -34,7 +38,11 @@ helm install rabbitmq bitnami/rabbitmq --version 10.3.9 -f services-values\rabbi
 
 Изменения производятся в собственных ветках. Пайплайн внутренних тестов происходит в момент Pull-request к ветке Main. 
 
+![Non-release pipeline](img/tests.PNG)
+
 Релиз и работа CD-пайплайнов происходит при создании релиза в Github. Версии приложений должны быть в формате `v*.*.*`, где `*` -- число. При создании релиза образ выкладывается в Dockerhub, а Helm-чарт с тегом версии разворачивается в кластере.
+
+![Release pipeline](img/release.PNG)
 
 Здесь также возможно сделать разворачивание приложения в отдельном неймспейсе для тестовых целей, при изменении main-ветки.
 
@@ -45,12 +53,17 @@ kubectl config set-credentials github-actions-deploy.my-cluster --token=$(kubect
 kubectl config set-context my-cluster-github-actions-deploy.my-cluster --cluster=my-cluster --user=github-actions-deploy.my-cluster --kubeconfig=kube.config
 kubectl config use-context my-cluster-github-actions-deploy.my-cluster --kubeconfig=kube.config
 ```
+![Kubernetes dashboard](img/dashboard.PNG)
 
 # Мониторинг
 
 Отправка метрик приложения в Prometheus происходит через аннотацию `prometheus.deckhouse.io` в сервисах. Метрики появятся в Prometheus Декхауса автоматически.
 
 Дашборд для мониторинга приложения в Grafana находится в файле `crawler-dashboard.json`.
+
+![Crawler metrics](img/metrics-crawler.PNG)
+
+![Crawler-UI metrics](img/metrics-crawler-ui.PNG)
 
 Отправка логов в Loki настраивается применением конфигурации:
 
@@ -83,6 +96,8 @@ spec:
 ```
 
 Loki имеет внутренний инструмент парсинга json, дополнительная настройка не нужна.
+
+![Loki logs](img/loki.PNG)
 
 Сбор метрик компонентов Deckhouse и их визуализация не требует настройки.
 
